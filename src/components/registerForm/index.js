@@ -3,6 +3,8 @@ import './formR.scss';
 // import incorrect from '../../static/incorrect.png'
 // import correct from '../../static/correct.png'
 
+const validEmail = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+
 export default class Registration extends React.Component {
     state = {
         firstname: "",
@@ -10,9 +12,15 @@ export default class Registration extends React.Component {
         email: "",
         psw: "",
         confirmPsw: "",        
-        isValid:false      
+        isValid:false,
+        send:false      
     }
 
+    send = () => {
+        this.setState({
+            isValid: true
+        }) 
+    }
 
     render() {
         return ( 
@@ -20,7 +28,7 @@ export default class Registration extends React.Component {
             <h1 className = "title" >
                 Registration Form 
             </h1> 
-            <div className = "fields" >
+            <div className = "fields">
                 <div style={{color:'red'}}>
                     {
                         this.state.firstname.length === 0 && this.state.isValid ? 'This field can not be empty!' : null
@@ -37,7 +45,7 @@ export default class Registration extends React.Component {
                     onChange ={(event) => this.setState({ lastname: event.target.value })} /> 
                 <div style={{color:'red'}}>
                     {
-                       this.state.email.length === 0 && this.state.email !== '/^\w+@\w+\.\w{2,4}$/i' && this.state.isValid ? 'Email not valid' : null
+                       !validEmail.test(this.state.email) && this.state.isValid ? 'Email not valid' : null
                     }
                 </div>
                 <input className = "inputField" type = "email" name = "email" placeholder = "Email" 
@@ -51,7 +59,7 @@ export default class Registration extends React.Component {
                     onChange = {(event) => this.setState({ psw: event.target.value })} /> 
                 <input className = "inputField" type = "password" name = "confirmPsw" placeholder = "Repeat password" 
                     onChange = {(event) => this.setState({ confirmPsw: event.target.value })} /> 
-                <button className = "button" onClick = {() => this.setState({isValid: true}) }> Register </button> 
+                <button className = "button" onClick = {this.send}> Register </button> 
             </div> 
         </div>
         );
